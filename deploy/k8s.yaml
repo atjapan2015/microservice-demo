@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice1
+spec:
+  selector:
+    matchLabels:
+      app: microservice1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: microservice1
+    spec:
+      containers:
+        - name: microservice1
+          image: atjapan2015/microservice-demo:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: spring.application.name
+              value: "microservice1"
+            - name: server.port
+              value: "8081"
+            - name: http.server.url
+              value: "http://microservice2-svc:8081"
+            - name: grpc.server.port
+              value: "9091"
+            - name: grpc.client.grpc-sb-server.address
+              value: "static://microservice2-svc:9091"
+          ports:
+            - containerPort: 8081
+            - containerPort: 9091
+          securityContext:
+            privileged: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice1-svc
+spec:
+  ports:
+    - name: http
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+    - name: grpc
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+  selector:
+    app: microservice1
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice2
+spec:
+  selector:
+    matchLabels:
+      app: microservice2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: microservice2
+    spec:
+      containers:
+        - name: microservice2
+          image: atjapan2015/microservice-demo:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: spring.application.name
+              value: "microservice2"
+            - name: server.port
+              value: "8081"
+            - name: http.server.url
+              value: "http://microservice1-svc:8081"
+            - name: grpc.server.port
+              value: "9091"
+            - name: grpc.client.grpc-sb-server.address
+              value: "static://microservice1-svc:9091"
+          ports:
+            - containerPort: 8081
+            - containerPort: 9091
+          securityContext:
+            privileged: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice2-svc
+spec:
+  ports:
+    - name: http
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+    - name: grpc
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+  selector:
+    app: microservice2
+  type: LoadBalancer
+---

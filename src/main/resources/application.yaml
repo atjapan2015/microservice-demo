@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ms1
+server:
+  port: 8081
+http:
+  server:
+    url: "http://127.0.0.1:8081"
+grpc:
+  server:
+    port: 9091
+    enable-keep-alive: true
+  client:
+    grpc-sb-server:
+      address: 'static://127.0.0.1:9091'
+      enableKeepAlive: true
+      keepAliveTimeout: 20s
+      keepAliveWithoutCalls: false
+      defaultLoadBalancingPolicy: round_robin
+      negotiationType: plaintext
