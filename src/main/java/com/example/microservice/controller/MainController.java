@@ -26,7 +26,7 @@ public class MainController {
             return response.getBody().toString().replace("HTTP_SERVER_URL", httpServerUrl);
         } catch (Exception e) {
             log.error(e.toString());
-            return "[Failed]Microservice 1 Invoke Microservice 2 [" + httpServerUrl + "] via HTTP Failed.\n";
+            return "[Failed]Microservice 1 Invoke Microservice 2 [" + httpServerUrl + "] via HTTP Failed.";
         }
     }
 
@@ -41,7 +41,7 @@ public class MainController {
             return response.getBody().toString().replace("HTTP_SERVER_URL", httpServerUrl);
         } catch (Exception e) {
             log.error(e.toString());
-            return "[Failed]Microservice 1 Invoke Microservice 2 [" + httpServerUrl + "] via HTTP2 Failed.\n";
+            return "[Failed]Microservice 1 Invoke Microservice 2 [" + httpServerUrl + "] via HTTP2 Failed.";
         }
     }
 
